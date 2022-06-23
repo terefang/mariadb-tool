@@ -63,6 +63,8 @@
                 <version>1.0.1</version>
                 <configuration>
                     <mainClass>com.terefang.mariadbtool.Main</mainClass>
+                    <classifier>dist</classifier>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
                 </configuration>
                 <executions>
                     <execution>
@@ -88,21 +90,25 @@
                             <target>
 
 
-                                <concat destfile="${project.build.directory}/${project.artifactId}.sh.bin" binary="true">
+                                <concat destfile="${project.build.directory}/${project.artifactId}-${project.version}.sh.bin" binary="true">
                                     <fileset file="${project.basedir}/src/main/dist/stub.sh"/>
-                                    <fileset file="${project.build.directory}/${project.artifactId}-${project.version}-pkg.jar"/>
+                                    <fileset file="${project.build.directory}/${project.artifactId}-${project.version}-dist.jar"/>
                                 </concat>
-                                <concat destfile="${project.build.directory}/${project.artifactId}.cmd.bin" binary="true">
+                                <concat destfile="${project.build.directory}/${project.artifactId}-${project.version}.cmd.bin" binary="true">
                                     <fileset file="${project.basedir}/src/main/dist/stub.bat"/>
-                                    <fileset file="${project.build.directory}/${project.artifactId}-${project.version}-pkg.jar"/>
+                                    <fileset file="${project.build.directory}/${project.artifactId}-${project.version}-dist.jar"/>
                                 </concat>
 
-                                <copy tofile="${project.build.directory}//${project.artifactId}.bin.sh">
-                                    <fileset file="${project.build.directory}/${project.artifactId}.sh.bin" />
+                                <copy tofile="${project.build.directory}/${project.artifactId}.sh">
+                                    <fileset file="${project.build.directory}/${project.artifactId}-${project.version}.sh.bin" />
+                                </copy>
+
+                                <copy tofile="${project.build.directory}/${project.artifactId}.cmd">
+                                    <fileset file="${project.build.directory}/${project.artifactId}-${project.version}.cmd.bin" />
                                 </copy>
 
                                 <chmod perm="ugo+rx">
-                                    <fileset dir="${project.build.directory}" includes="${project.artifactId}.*"/>
+                                    <fileset dir="${project.build.directory}" includes="${project.artifactId}*"/>
                                 </chmod>
                             </target>
                         </configuration>
