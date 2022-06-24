@@ -6,7 +6,7 @@
 
     <groupId>com.github.terefang</groupId>
     <artifactId>mariadb-tool</artifactId>
-    <version>2022.1.0</version>
+    <version>2022.2.1</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -75,6 +75,42 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <configurationSourceDirectory>src/main/dist/conf</configurationSourceDirectory>
+                    <configurationDirectory>conf</configurationDirectory>
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                    <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+                    <useWildcardClassPath>true</useWildcardClassPath>
+                    <endorsedDir>ext</endorsedDir>
+                    <repositoryName>lib</repositoryName>
+                    <assembleDirectory>${project.build.directory}/${artifactId}-assemble</assembleDirectory>
+                    <extraJvmArguments>-Xms512m</extraJvmArguments>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <logsDirectory>logs</logsDirectory>
+                    <platforms>
+                        <platform>unix</platform>
+                        <platform>windows</platform>
+                    </platforms>
+                    <programs>
+                        <program>
+                            <mainClass>com.terefang.mariadbtool.Main</mainClass>
+                            <id>${artifactId}</id>
+                        </program>
+                    </programs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.8</version>
@@ -110,6 +146,10 @@
                                 <chmod perm="ugo+rx">
                                     <fileset dir="${project.build.directory}" includes="${project.artifactId}*"/>
                                 </chmod>
+
+                                <zip destfile="${project.build.directory}/${artifactId}-${project.version}.zip" compress="true">
+                                    <zipfileset dir="${project.build.directory}/${artifactId}-assemble" prefix="${project.artifactId}-${project.version}"/>
+                                </zip>
                             </target>
                         </configuration>
                     </execution>
